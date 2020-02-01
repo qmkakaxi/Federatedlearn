@@ -1,23 +1,10 @@
-import time
-import copy
 from torchvision import datasets, transforms
 import torch
 from utils.options import args_parser
 from models.Nets import CNNMnist, CNNCifar
 from models.test import test
-import torch.distributed as dist
-from math import ceil
-from torch.autograd import Variable
 import torch.nn.functional as F
-import torch.multiprocessing as mp
-import numpy as np
-from socket import *
-from merge.merge import merge
-# from communication.instruct import instruct
-import collections
-import os
-import json
-from utils.FederatedLearning import FederatedLearning
+from models.FederatedLearning import FederatedLearning
 
 
 class Partition(object):
