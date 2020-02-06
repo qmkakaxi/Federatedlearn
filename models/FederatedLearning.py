@@ -19,7 +19,7 @@ def merge(nets):
     net = {}
     for i in range(len(nets[0].keys())):
         keys = [list(net.keys())[i] for net in nets]
-        net[keys[0]] = np.mean([np.array(nets[j][keys[j]]) for j in range(len(nets))], axis=0)
+        net[keys[0]] = np.mean([np.array(nets[j][keys[0]]) for j in range(len(nets))], axis=0)
         net[keys[0]] = net[keys[0]].tolist()
     return net
 
