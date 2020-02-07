@@ -49,3 +49,7 @@ if __name__ == '__main__':
     test_accuracy, test_loss = test(net, test_set, args)
     print("Testing accuracy: {:.2f}".format(test_accuracy))
     print("Testing loss: {:.2f}".format(test_loss))
+
+    #保存网络参数
+    w_wag=net.state_dict()
+    torch.save(w_wag,'w_wag')

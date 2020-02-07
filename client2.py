@@ -3,6 +3,7 @@ from utils.options import args_parser
 from models.Nets import CNNMnist, CNNCifar
 import torch.nn.functional as F
 from models.FederatedLearning import FederatedLearning
+from models.test import test
 
 
 class Partition(object):
@@ -34,5 +35,11 @@ if __name__ == '__main__':
     net = CNNMnist().to(device)
     optimizer=torch.optim.SGD(net.parameters(), lr=args.lr, momentum=0.5)
     lossfunction=F.nll_loss
-    FederatedLearning(HOST=HOST,PORT=PORT, world_size=world_size, partyid=2, net=net,optimizer=optimizer,
+    net=FederatedLearning(HOST=HOST,PORT=PORT, world_size=world_size, partyid=2, net=net,optimizer=optimizer,
                       dataset=data,lossfunction=lossfunction,device=device)
+
+    test_set = torch.utils.data.DataLoader(data, batch_size=args.bs)
+    args.device=device
+    test_accuracy, test_loss = test(net, test_set, args)
+    print("Trainng accuracy: {:.2f}".format(test_accuracy))
+    print("Training loss: {:.2f}".format(test_loss))
