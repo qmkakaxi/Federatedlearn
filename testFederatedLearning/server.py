@@ -26,8 +26,7 @@ class Partition(object):
 if __name__ == '__main__':
 
     args = args_parser()
-    dataset='data_of_client1'
-    data = torch.load(dataset)
+    data = []
     device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
 
     #设置相关参数
