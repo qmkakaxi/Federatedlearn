@@ -1,6 +1,7 @@
 import torch
 from utils.options import args_parser
 from models.Nets import CNNMnist, CNNCifar
+import torch.nn.functional as F
 from models.FederatedLearning import FederatedLearning
 
 
