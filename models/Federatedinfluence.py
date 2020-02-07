@@ -5,7 +5,7 @@ import models.utility as utility
 import numpy as np
 from torchvision import datasets, transforms
 from models.deliver import deliver
-
+import time
 
 def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
                        bs=32,test_id=0,device=torch.device('cpu'),epoch=10,BUFSIZ=1024000000):
@@ -108,13 +108,14 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
 
         # #list to tensor
         temp=v_new['data']
-        print(type(temp))
         num=len(temp)
         v_=list(v)
         for i in range(num):
             v_[i]=torch.tensor(temp[i]).to(device)
+        start=time.time()
         s_test=stest(v_,model,train_set,device=device,damp=0.01,scale=1000.0,repeat=5)   #计算s_test
-
+        end=time.time()
+        print("s_test time:",end-start)
 
         #向server发送s_test,进行下一次迭代
 
@@ -133,10 +134,7 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
         recData=client.rec()
         s_test_fin=recData
         num=len(s_test_fin)
-        print(type(s_test_fin))
-        print(num)
         for i in range(num):
-            print(i)
             s_test_fin[i]=torch.tensor(s_test_fin[i]).to(device)
         """s_test计算结束，得到最终的s_test_fin，开始计算influence"""
 
@@ -153,7 +151,7 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
             #计算influence
             inf_tmp = -sum([torch.sum(k * j).data.cpu().numpy() for k, j in six.moves.zip(grad_z_vec, s_test_fin)]) /n
             influence[i]=inf_tmp
-#        influence=torch.tensor(influence).to(device)
+
         # 拼接传输的数据内容
         data = {}
         data["data"] = list(influence)
