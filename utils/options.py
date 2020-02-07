@@ -22,3 +22,4 @@ def args_parser():
     parser.add_argument('--party-id', type=int, default=0)
     args = parser.parse_args()
     return args
+
