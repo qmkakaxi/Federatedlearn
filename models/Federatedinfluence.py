@@ -25,7 +25,6 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
 
 
         """calculate influence function"""
-#        model=net.to(device)
         model=net
         test_id=test_id      #选择的test数据id
         data, target = test_set.dataset[test_id]
