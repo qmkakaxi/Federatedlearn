@@ -127,5 +127,5 @@ def FederatedLearning(HOST,PORT, world_size, partyid, net,optimizer,dataset,
                 new_net[key] = torch.tensor((new_net[key])).to(device)
             new_net = collections.OrderedDict(new_net)
             net.load_state_dict(new_net)
-
+        return net
 
