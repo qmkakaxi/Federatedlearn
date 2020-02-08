@@ -3,8 +3,10 @@
   
   ## 联邦学习：
   
-  ```Federatedinfluence(HOST=HOST,PORT=PORT, world_size=world_size, partyid=0, net=model,
-                      dataset=data,device=device)
+  ```FederatedLearning(HOST,PORT, world_size, partyid, net,optimizer,dataset,
+                      lossfunction=F.nll_loss,device=torch.device('cpu'),epoch=10,BUFSIZ=1024000000,batch_size=64,iter=5)
+       ```               
+       ```     
     HOST:联邦学习server的ip
     PORT:端口号
     world_size:client的数量
