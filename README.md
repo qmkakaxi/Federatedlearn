@@ -1,15 +1,15 @@
 # Federatedlearn
   基于pytorch和socket实现的简易联邦学习和数据质量评估系统
   
-  ## 联邦学习：
+  ## FederatedLearning：
   
-  ### 函数：
+  ### function：
   
   ```
   FederatedLearning(HOST,PORT, world_size, partyid, net,optimizer,dataset,
                       lossfunction=F.nll_loss,device=torch.device('cpu'),epoch=10,BUFSIZ=1024000000,batch_size=64,iter=5)
   ```
- ### 参数：
+ ### Parameters：
   ```
     HOST:联邦学习server的ip
     PORT:可用的端口号
@@ -25,7 +25,8 @@
     iter:每个client的内循环
 ```
   
-  ### 举例：
+  ### tutorial：
+  
    一个server，两个client
   #### server：
   ```
