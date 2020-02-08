@@ -117,7 +117,7 @@
     w_wag =torch.load('w_wag')
     model=CNNMnist().to(device)
     model.load_state_dict(w_wag)
-    partyid=0
+    partyid=1
     influence=Federatedinfluence(HOST=HOST,PORT=PORT, world_size=world_size, partyid=partyid, net=model,
                       dataset=data,device=device)
   ```
@@ -130,7 +130,7 @@
     w_wag =torch.load('w_wag')
     model=CNNMnist().to(device)
     model.load_state_dict(w_wag)
-    partyid=0
+    partyid=2
     influence=Federatedinfluence(HOST=HOST,PORT=PORT, world_size=world_size, partyid=partyid, net=model,
                       dataset=data,device=device)
   ```
