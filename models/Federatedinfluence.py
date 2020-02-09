@@ -111,10 +111,9 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
         v_=list(v)
         for i in range(num):
             v_[i]=torch.tensor(temp[i]).to(device)
-        start=time.time()
+
         s_test=stest(v_,model,train_set,device=device,damp=0.01,scale=1000.0,repeat=5)   #计算s_test
-        end=time.time()
-        print("s_test time:",end-start)
+
 
         #向server发送s_test,进行下一次迭代
 
@@ -128,7 +127,10 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
         data["data"] = v_temp
         data["partyid"] = partyid
 
+        start=time.time()
         client.send(data)
+        end=time.time()
+        print("send data time:",end-start)
         #迭代完成后，从server接收最终的s_test，计算influence function
         recData=client.rec()
         s_test_fin=recData
