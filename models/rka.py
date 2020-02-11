@@ -5,10 +5,8 @@ from  models import utility
 import torch.nn.functional as F
 
 
-def hessian(model,train_set,id,gpu=-1):
+def hessian(model,train_set,id,device):
 
-    #设置cpu和gpu
-    device=torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
 
     # 计算出抽样得到的该元素的具体位置
     id1 = 0
