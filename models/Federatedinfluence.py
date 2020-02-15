@@ -8,9 +8,11 @@ from models.deliver import deliver
 import time
 import random
 from models.rka import hessian,rka
+import torch.nn.functional as F
+
 
 def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
-                       bs=32,test_id=0,device=torch.device('cpu'),epoch=10,BUFSIZ=1024000000):
+                       lossfunction=F.nll_loss,bs=32,test_id=0,device=torch.device('cpu'),epoch=10,BUFSIZ=1024000000):
 
 
     if partyid==0:
@@ -34,7 +36,7 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
         target = test_set.collate_fn([target])
 
         print("begin grad")
-        grad_test=grad_z(data,target,model,device=device,create_graph=False)   #v初始值
+        grad_test=grad_z(data,target,model,device=device,create_graph=False,lossfunction=lossfunction)   #v初始值
         print("end grad")
         v=grad_test
         s_test = []
@@ -98,7 +100,7 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
         data, target= train_set.dataset[0]
         data = train_set.collate_fn([data])
         target= train_set.collate_fn([target])
-        grad_v = grad_z(data, target, model,device=device)
+        grad_v = grad_z(data, target, model,device=device,lossfunction=lossfunction)
         v=grad_v
 
 
@@ -114,7 +116,8 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
         for i in range(num):
             v_[i]=torch.tensor(temp[i]).to(device)
 
-        s_test=stest(v_,model,train_set,device=device,damp=0.01,scale=1000.0,repeat=5)   #计算s_test
+
+        s_test=stest(v_,model,train_set,device=device,damp=0.01,scale=1000.0,repeat=5,lossfunction=lossfunction)   #计算s_test
 
 
         #向server发送s_test,进行下一次迭代
@@ -150,7 +153,7 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
             data, target= train_set.dataset[i]
             data = train_set.collate_fn([data])
             target= train_set.collate_fn([target])
-            grad_z_vec = grad_z(data, target, model,device=device)
+            grad_z_vec = grad_z(data, target, model,device=device,lossfunction=lossfunction)
             #计算influence
             inf_tmp = -sum([torch.sum(k * j).data.cpu().numpy() for k, j in six.moves.zip(grad_z_vec, s_test_fin)]) /n
             influence[i]=inf_tmp
@@ -167,7 +170,7 @@ def Federatedinfluence(HOST,PORT, world_size, partyid, net,dataset,
 
 
 def Federatedinfluence_rka(HOST,PORT, world_size, partyid, net,dataset,
-                       num_sample_rka=10,bs=32,test_id=0,device=torch.device('cpu'),epoch=10,BUFSIZ=1024000000):
+                       lossfunction=F.nll_loss,num_sample_rka=10,bs=32,test_id=0,device=torch.device('cpu'),epoch=10,BUFSIZ=1024000000):
 
     if partyid==0:
         """ server """
@@ -189,7 +192,7 @@ def Federatedinfluence_rka(HOST,PORT, world_size, partyid, net,dataset,
         target = test_set.collate_fn([target])
 
         print("begin grad")
-        grad_test = grad_z(data, target, model, device=device, create_graph=False)  # grad_test
+        grad_test = grad_z(data, target, model, device=device, create_graph=False,lossfunction=lossfunction)  # grad_test
         print("end grad")
         v = grad_test
 
@@ -279,7 +282,7 @@ def Federatedinfluence_rka(HOST,PORT, world_size, partyid, net,dataset,
             for i in range(len(second_grad)):
                 second_grad[i]=torch.tensor(second_grad[i]).to(device)
             # 使用rka算法计算stest
-            stest = rka(stest, second_grad, grad_test)
+            stest = rka(stest, second_grad, grad_test,lossfunction=lossfunction)
             s_test_fin = stest
 
         """交互结束"""
@@ -295,7 +298,7 @@ def Federatedinfluence_rka(HOST,PORT, world_size, partyid, net,dataset,
             data, target= train_set.dataset[i]
             data = train_set.collate_fn([data])
             target= train_set.collate_fn([target])
-            grad_z_vec = grad_z(data, target, model,device=device)
+            grad_z_vec = grad_z(data, target, model,device=device,lossfunction=lossfunction)
             #计算influence
             inf_tmp = -sum([torch.sum(k * j).data.cpu().numpy() for k, j in six.moves.zip(grad_z_vec, s_test_fin)]) /n
             influence[i]=inf_tmp

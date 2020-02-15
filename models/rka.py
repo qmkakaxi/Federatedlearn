@@ -5,7 +5,7 @@ from  models import utility
 import torch.nn.functional as F
 
 
-def hessian(model,train_set,id,device):
+def hessian(model,train_set,id,device,lossfunction = F.nll_loss):
 
 
     # 计算出抽样得到的该元素的具体位置
@@ -31,7 +31,7 @@ def hessian(model,train_set,id,device):
         data = train_set.collate_fn([data]).to(device)
         target = train_set.collate_fn([target]).to(device)
         output=model(data)
-        loss = F.nll_loss(output, target, weight=None, reduction='mean')
+        loss = lossfunction(output, target)
 
         #first_grad为loss对mdele.parameters()的一阶导，type为tuple
         first_grad=grad(loss,list(model.parameters()),create_graph=True)

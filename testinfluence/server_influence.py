@@ -2,6 +2,7 @@ import torch
 from utils.options import args_parser
 from models.Nets import CNNMnist, CNNCifar
 from models.Federatedinfluence import Federatedinfluence
+import torch.nn.functional as F
 
 class Partition(object):
 	""" Dataset-like object, but only access a subset of it. """
@@ -32,7 +33,8 @@ if __name__ == '__main__':
     w_wag =torch.load('w_wag')
     model=CNNMnist().to(device)
     model.load_state_dict(w_wag)
-    influence=Federatedinfluence(HOST=HOST,PORT=PORT, world_size=world_size, partyid=0, net=model,
+    lossfunction=F.nll_loss
+    influence=Federatedinfluence(HOST=HOST,PORT=PORT, world_size=world_size, partyid=0, net=model,lossfunction=lossfunction,
                       dataset=data,device=device)
 
 

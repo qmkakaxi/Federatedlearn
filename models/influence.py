@@ -5,6 +5,7 @@ from  models import utility
 from torch.autograd import Variable
 import torch.nn.functional as F
 import random
+
 def hvp(y, w, v):
     first_grads = grad(y, w, retain_graph=True, create_graph=True)
     grad_v = 0
@@ -13,28 +14,29 @@ def hvp(y, w, v):
     grad(grad_v, w, create_graph=True)
     return grad(grad_v, w, create_graph=True)
 
-def grad_z(z, t, model, gpu,create_graph=True):
-    device = torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
+def grad_z(z, t, model, device,create_graph=True,lossfunction = F.nll_loss):
     model.eval()
     z, t = Variable(z, volatile=False).to(device), Variable(t, volatile=False).to(device)
     y = model(z)
-    loss = F.nll_loss(y, t, weight=None, reduction='mean')
-    return list(grad(loss, list(model.parameters()), create_graph=create_graph))
+    loss = lossfunction(y, t)
+    return (grad(loss, list(model.parameters()), create_graph=create_graph))
 
-def stest(v,model,z_loader,gpu,damp=0.01,scale=25.0,repeat=5):
-    h_estimate=v.copy()
+
+
+def stest(v,model,z_loader,device,damp=0.01,scale=25.0,repeat=5,lossfunction = F.nll_loss):
+    h_estimate=v
     train_set=z_loader
-    device = torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
     for i in utility.create_progressbar(repeat, desc='s_test'):
         j=random.randint(0,len(z_loader))
         data, target= train_set.dataset[j]
         data = train_set.collate_fn([data])
-        target= train_set.collate_fn([target]) 
+        target= train_set.collate_fn([target])
         x, t = Variable(data, volatile=False).to(device), Variable(target, volatile=False).to(device)
         y = model(x)
-        loss = F.nll_loss(y, t, weight=None, reduction='mean')
+        loss = lossfunction(y, t)
         hv = hvp(loss, list(model.parameters()), h_estimate)
         h_estimate = [_v + (1 - damp) * h_estimate - _hv / scale for _v, h_estimate, _hv in six.moves.zip(v, h_estimate, hv)]
 
     return h_estimate
+
 
