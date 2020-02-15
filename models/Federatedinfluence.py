@@ -267,7 +267,7 @@ def Federatedinfluence_rka(HOST,PORT, world_size, partyid, net,dataset,
         stest=grad_test
         for k in range(num_sample_rka):
             id=client.rec()              #从server接收采样id
-            second_grad=hessian(model,train_set,id,device=device) #计算二阶导
+            second_grad=hessian(model,train_set,id,device=device,lossfunction=lossfunction) #计算二阶导
 
             #tensor to list
             second_grad_temp=[]
@@ -282,7 +282,7 @@ def Federatedinfluence_rka(HOST,PORT, world_size, partyid, net,dataset,
             for i in range(len(second_grad)):
                 second_grad[i]=torch.tensor(second_grad[i]).to(device)
             # 使用rka算法计算stest
-            stest = rka(stest, second_grad, grad_test,lossfunction=lossfunction)
+            stest = rka(stest, second_grad, grad_test)
             s_test_fin = stest
 
         """交互结束"""
