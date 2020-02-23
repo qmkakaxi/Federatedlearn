@@ -31,7 +31,7 @@
   #### server：
   ```
     device = torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
-    HOST=127.0.0。1
+    HOST=127.0.0.1
     PORT=123456
     world_size=2
     net = CNNMnist().to(device) #定义好的网络结构
@@ -45,7 +45,7 @@
   #### client1：
   ```
     device = torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
-    HOST=127.0.0。1
+    HOST=127.0.0.1
     PORT=123456
     world_size=2
     net = CNNMnist().to(device) #定义好的网络结构
@@ -59,7 +59,7 @@
    #### client2：
   ```
     device = torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
-    HOST=127.0.0。1
+    HOST=127.0.0.1
     PORT=123456
     world_size=2
     net = CNNMnist().to(device) #定义好的网络结构
@@ -98,7 +98,7 @@
   #### server：
   ```
     device = torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
-    HOST=127.0.0。1
+    HOST=127.0.0.1
     PORT=123456
     world_size=2
     w_wag =torch.load('w_wag')
@@ -111,7 +111,7 @@
   #### client1：
   ```
     device = torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
-    HOST=127.0.0。1
+    HOST=127.0.0.1
     PORT=123456
     world_size=2
     w_wag =torch.load('w_wag')
@@ -124,7 +124,7 @@
    #### client2：
   ```
     device = torch.device('cuda:{}'.format(gpu) if torch.cuda.is_available() and gpu != -1 else 'cpu')
-    HOST=127.0.0。1
+    HOST=127.0.0.1
     PORT=123456
     world_size=2
     w_wag =torch.load('w_wag')
