@@ -1,5 +1,7 @@
 # Federatedlearn
   基于pytorch和socket实现的简易联邦学习和数据质量评估系统(可部署在服务器和各种边缘节点）
+
+  注意：写的不是很好，慎用。
   
   ## FederatedLearning：
   
